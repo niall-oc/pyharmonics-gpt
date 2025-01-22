@@ -1,0 +1,10 @@
+version: '3.9'
+services:
+  pyharmonics-gpt:
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    volumes:
+      - .:/app
