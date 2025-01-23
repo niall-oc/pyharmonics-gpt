@@ -16,7 +16,7 @@ app.register_blueprint(api_blueprint)
 # Root endpoint
 @app.route("/", methods=["GET"])
 def home():
-    return jsonify({"message": f"Welcome to the Harmonics + OpenAI API! {app.url_map}"}), 200
+    return jsonify({"message": "Welcome to the Harmonics + OpenAI API!"}), 200
 
 
 if __name__ == "__main__":
