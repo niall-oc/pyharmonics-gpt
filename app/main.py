@@ -3,6 +3,7 @@ from flask import Flask, jsonify, request, render_template
 from dotenv import load_dotenv
 import os
 import yaml
+import json
 import logging
 
 # Set up logging
@@ -45,21 +46,36 @@ def query_openai_route():
             logging.info(f"Harmonic data: {harmonic_data.keys()}")
         except Exception as e:
             return jsonify({"response": f"Pyharmonics raised the following exception: {str(e)}"}), 200
+        plot = harmonic_data.pop('plot', None)
+        logging.debug(f"harmonic data: {harmonic_data.keys()}")
+        logging.info(f"base 64 image: {type(plot)}")
 
         # Prepare the response data
         pyharmonics_response = str({
             "asset": symbol,
             "timeframe": interval,
-            "found": harmonic_data
+            "found": harmonic_data,
         })
+        logging.debug(f"Pyharmonics response is built as {type(pyharmonics_response)}\n{pyharmonics_response}")
 
         # Get the response from OpenAI
-        response = query_openai(pyharmonics_response, gpt_prompt_intent['technical_analysis'], model=openai_api_model)
+        gpt_response = query_openai(pyharmonics_response, gpt_prompt_intent['technical_analysis'], model=openai_api_model)
+        logging.debug(f"OpenAI response: {gpt_response}")
 
         # Return the OpenAI response
-        return jsonify({"response": f"{response}"}), 200
+        response_data = {
+            "response": {
+                "model": gpt_response,
+                "image": {
+                    "data": plot,
+                    "format": "image/png"
+                }
+            }
+        }
+        return jsonify(response_data), 200
 
     except Exception as e:
+        logging.error(f"An error occurred: {str(e)}")
         return jsonify({"error": f"{str(e)}"}), 500
 
 @app.route('/')

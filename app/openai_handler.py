@@ -28,7 +28,7 @@ def parse_args(string):
         function_name = data.get('function_name', '')
         args = data.get('args', [])
         kwargs = data.get('kwargs', {})
-        logging.info(f"Function name: {function_name}, args: {args}, kwargs: {kwargs}")
+        logging.info(f"preparing to call {function_name}({args}, {kwargs})")
         return function_name, args, kwargs
     except json.JSONDecodeError:
         print(f"Error: Invalid JSON string: {string}")
@@ -47,7 +47,10 @@ def query_openai(prompt, developer_content, model='gpt-3.5-turbo'):
         Returns:
             A tuple containing the function name, args, and kwargs.
     """
-    intent_args_response = openai.ChatCompletion.create(
+    logging.debug(f"Prompt: {prompt}")
+    logging.debug(f"Developer content: {developer_content}")
+    logging.debug(f"Model: {model}")
+    response = openai.ChatCompletion.create(
         model=model,  # An economical model for testing and development.
         messages=[
             {"role": "developer", "content": developer_content},
@@ -55,5 +58,4 @@ def query_openai(prompt, developer_content, model='gpt-3.5-turbo'):
         ],
         max_tokens=100
     )
-    logging.debug(f"Intent args response: {intent_args_response}")
-    return intent_args_response.choices[0].message.content
+    return response.choices[0].message.content

@@ -1,16 +1,18 @@
 extract_args: |
   I will ask you if there are any tradable harmonic patterns or divergences recently formed on the chart.
   You will extract my function_name and the args needed from my query.
-  If my query refers to a crytpo currency pair my intent is to make an api call to a function named forming_binance.
-  If my query does not refer to a crypto currency pair my intent is to make an api call to function named forming_yahoo.
+  If my query refers to a crytpo currency pair my intent is to make an api call to a function named forming_binance else its named forming_yahoo.
   If my query mentions multiple assets, instruct me to pick one per request.
-  Parameters: symbol, interval, candles=, limit_to=, percent_complete=.
-  Symbol means the stock or crypto symbol, crypto uses forming-binance, stocks use forming-yahoo.
+  My args are symbol and interval
+  Symbol is the asset examples are aapl, btcusdt, ethusdt, MSFT, TSLA, etc.
   Interval means the timeframe, 15m, 1h, 4h, 1d, 1w are supported.
+  My optional args are candles, limit_to, percent_complete.
   candles means the number of candles to analyze, default is 1000.
   limit_to means the last number candles where the pattern completion is to be checked, default is 10.
   percent_complete is a float means how much of the final leg of price movement is completed, default is 0.8.
-  Respond a json string with 2 keys, 'function_name', 'args' and 'kwargs'. Do not pad the json string with any extra characters.
+  Respond a json string for example {"function_name", "forming_binance", "args": ["BTCUSDT", "1d"] "kwargs": {"candles": 1000, "limit_to": 10, "percent_complete": 0.8}. 
+  If optional arguments are not provided ignore for example {"function_name", "forming_binance", "args": ["BTCUSDT", "1d"] "kwargs": {}. 
+  Do not pad the json string with any extra characters.
 extract_args_error: |
   I could not extract the function_name and args from your query.
   Please make sure you have provided the correct information.
@@ -18,8 +20,8 @@ extract_args_error: |
   For example you can say, "Are there any harmonic patterns forming for BTCUSDT on the 1h time frame?"
 technical_analysis: |
   I will now give you a large json string containing information about harmonic patterns and divergences that are forming.
-  Pay attemtion to the most recent timestamps in this data.
-  I want to know id the sentiment is bullish or bearish.
+  Pay attention to the most recent timestamps in this data.
+  I want to know if the sentiment is bullish or bearish.
   I want to know if there is an entry price for a long or short.
   I want to know if there is a stop loss price.
   I want to know if there is a target price.

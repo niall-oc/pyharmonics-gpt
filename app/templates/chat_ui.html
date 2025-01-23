@@ -21,6 +21,7 @@
                 margin-bottom: 20px;
                 background-color: #f0f0f0;
                 min-height: 60vh;
+                max-height: 70vh;
             }
     
             #chat-input-container {
@@ -59,6 +60,22 @@
             chatContainer.scrollTop = chatContainer.scrollHeight; // Scroll to bottom
         }
 
+        function displayResponse(message, isUser) {
+            const messageElement = document.createElement('div');
+            const breakElement = document.createElement('br');
+            const imgElement = document.createElement('img');
+            messageElement.classList.add('message');
+            messageElement.classList.add(isUser ? 'user-message' : 'bot-message');
+            messageElement.textContent = message['model'];
+            chatContainer.appendChild(breakElement);
+            chatContainer.appendChild(messageElement);
+            if (message['image'] && message['image']['data']) { 
+                imgElement.src = `data:image/png;base64,${message['image']['data']}`; 
+                chatContainer.appendChild(imgElement);
+            }
+            chatContainer.scrollTop = chatContainer.scrollHeight; // Scroll to bottom
+        }
+
         function getBotResponse() {
             const userMessage = messageInput.value;
             displayMessage(userMessage, true);
@@ -73,7 +90,7 @@
             })
             .then(response => response.json())
             .then(data => {
-                displayMessage(data.response, false);
+                displayResponse(data.response, false);
             })
             .catch(error => {
                 console.error('Error:', error);

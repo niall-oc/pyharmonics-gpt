@@ -3,7 +3,7 @@ from pyharmonics.technicals import OHLCTechnicals
 from pyharmonics.search import HarmonicSearch, DivergenceSearch
 from pyharmonics.positions import Position
 from pyharmonics.plotter import HarmonicPlotter, PositionPlotter, OptionPlotter
-import json
+import base64
 
 
 def play_position(hs, pattern, strike, dollar_amount):
@@ -24,10 +24,11 @@ def whats_new(cd, limit_to=-1):
     p.add_harmonic_plots(hs.get_patterns(family=hs.ABCD))
     p.add_harmonic_plots(hs.get_patterns(family=hs.ABC))
     p.add_divergence_plots(d.get_patterns())
+    encoded_img = base64.b64encode(p.to_image(dpi=200)).decode('utf-8')
     return {
-        # 'plot': p,
-        'patterns': {family: [p.to_dict() for p in found] for family, found in hs.get_patterns().items()},
-        'divergences': {family: [p.to_dict() for p in found] for family, found in d.get_patterns().items()},
+        'plot': f'{encoded_img}',
+        'patterns': {family: [p.to_dict() for p in found[:1]] for family, found in hs.get_patterns().items()},
+        'divergences': {family: [p.to_dict() for p in found[:1]] for family, found in d.get_patterns().items()},
     }
 
 
@@ -55,10 +56,11 @@ def whats_forming(cd, limit_to=10, percent_complete=0.8):
     p.add_harmonic_plots(hs.get_patterns(family=hs.ABCD, formed=False))
     p.add_harmonic_plots(hs.get_patterns(family=hs.ABC, formed=False))
     p.add_divergence_plots(d.get_patterns())
+    encoded_img = base64.b64encode(p.to_image(dpi=200)).decode('utf-8')
     return {
-        # 'plot': p,
-        'patterns': {family: [p.to_dict() for p in found] for family, found in hs.get_patterns(formed=False).items()},
-        'divergences': {family: [p.to_dict() for p in found[:3]] for family, found in d.get_patterns().items()},
+        'plot': f'{encoded_img}',
+        'patterns': {family: [p.to_dict() for p in found[:1]] for family, found in hs.get_patterns(formed=False).items()},
+        'divergences': {family: [p.to_dict() for p in found[:1]] for family, found in d.get_patterns().items()},
     }
 
 
