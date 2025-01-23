@@ -10,7 +10,9 @@ logging.basicConfig(level=logging.INFO)
 
 # Load environment variables
 load_dotenv()
-os.getenv("OPENAI_API_KEY")  # Ensure the OpenAI API key is set
+openai_api_key = os.getenv("OPENAI_API_KEY")  # Ensure the OpenAI API key is set
+openai_api_model = os.getenv("OPENAI_API_MODEL")  # Ensure the OpenAI API model is set
+logging.info(f"OpenAI API model: {openai_api_model}")
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -31,7 +33,7 @@ def query_openai_route():
             return jsonify({"error": "Prompt is required"}), 400
 
         # Determine the intent of the prompt
-        function_name, args, kwargs = parse_args(query_openai(prompt, gpt_prompt_intent['extract_args']))
+        function_name, args, kwargs = parse_args(query_openai(prompt, gpt_prompt_intent['extract_args'], model=openai_api_model))
 
         if function_name not in FUNCTION_ROUTER:
             return jsonify({"response": gpt_prompt_intent['extract_args_error']}), 200
@@ -52,7 +54,7 @@ def query_openai_route():
         })
 
         # Get the response from OpenAI
-        response = query_openai(pyharmonics_response, gpt_prompt_intent['technical_analysis'])
+        response = query_openai(pyharmonics_response, gpt_prompt_intent['technical_analysis'], model=openai_api_model)
 
         # Return the OpenAI response
         return jsonify({"response": f"{response}"}), 200

@@ -37,7 +37,7 @@ def parse_args(string):
     return None, None, None
 
 
-def query_openai(prompt, developer_content):
+def query_openai(prompt, developer_content, model='gpt-3.5-turbo'):
     """
         Determines the intent of the given prompt.
 
@@ -48,7 +48,7 @@ def query_openai(prompt, developer_content):
             A tuple containing the function name, args, and kwargs.
     """
     intent_args_response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",  # An economical model for testing and development.
+        model=model,  # An economical model for testing and development.
         messages=[
             {"role": "developer", "content": developer_content},
             {"role": "user", "content": prompt}

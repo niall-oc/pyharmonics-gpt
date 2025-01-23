@@ -11,6 +11,7 @@ ENV PYTHONUNBUFFERED=1
 
 # Set your open API key ( un comment the line below )
 # ENV OPENAI_API_KEY=YOUR_KEY_GOES_HERE
+# ENV OPENAI_API_MODEL=gpt-3.5-turbo
 
 # Install pip requirements
 COPY requirements.txt .
