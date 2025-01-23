@@ -9,6 +9,9 @@ ENV PYTHONDONTWRITEBYTECODE=1
 # Turns off buffering for easier container logging
 ENV PYTHONUNBUFFERED=1
 
+# Set your open API key ( un comment the line below )
+# ENV OPENAI_API_KEY=YOUR_KEY_GOES_HERE
+
 # Install pip requirements
 COPY requirements.txt .
 RUN python -m pip install -r requirements.txt
