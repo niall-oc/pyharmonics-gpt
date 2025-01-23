@@ -86,26 +86,3 @@ def whats_options_interest(symbol):
     yo.analyse_options()
     p = OptionPlotter(yo, yo.ticker.options[0])
     return p. yo
-
-
-def parse_args(string):
-    """
-        Parses the given string into Python variables.
-
-        Args:
-            string: The string to be parsed.
-
-        Returns:
-            A tuple containing the parsed args and kwargs.
-    """
-    try:
-        data = json.loads(string)
-        args = data.get('args', [])
-        kwargs = data.get('kwargs', {})
-        return args, kwargs
-    except json.JSONDecodeError:
-        print(f"Error: Invalid JSON string: {string}")
-        return None, None
-    except Exception as e:
-        print(f"Error: {e}")
-        return None, None

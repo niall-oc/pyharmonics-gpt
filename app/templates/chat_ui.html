@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Simple Chat</title>
+        <style>
+            body {
+                font-family: sans-serif;
+                display: flex;
+                flex-direction: column;
+                min-height: 100vh;
+                align-items: center; /* Center vertically */
+            }
+    
+            #chat-container {
+                max-width: 80vh;
+                width: 100%;
+                border: 1px solid #ccc;
+                padding: 20px;
+                border-radius: 5px;
+                overflow-y: scroll;
+                margin-bottom: 20px;
+                background-color: #f0f0f0;
+                min-height: 60vh;
+            }
+    
+            #chat-input-container {
+                width: 100%; 
+                display: flex; 
+            }
+    
+            #message-input {
+                flex-grow: 1;
+                padding: 10px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                min-width: 80vh;
+                max-height: 10vh;
+            }
+        </style>
+    </head>
+<body>
+
+    <div id="chat-container"></div>
+
+    <textarea id="message-input" placeholder="Enter your message"></textarea>
+
+    <script>
+        const chatContainer = document.getElementById('chat-container');
+        const messageInput = document.getElementById('message-input');
+
+        function displayMessage(message, isUser) {
+            const messageElement = document.createElement('div');
+            const breakElement = document.createElement('br');
+            messageElement.classList.add('message');
+            messageElement.classList.add(isUser ? 'user-message' : 'bot-message');
+            messageElement.textContent = message;
+            chatContainer.appendChild(breakElement);
+            chatContainer.appendChild(messageElement);
+            chatContainer.scrollTop = chatContainer.scrollHeight; // Scroll to bottom
+        }
+
+        function getBotResponse() {
+            const userMessage = messageInput.value;
+            displayMessage(userMessage, true);
+            messageInput.value = '';
+
+            fetch('/query', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ 'prompt': userMessage })
+            })
+            .then(response => response.json())
+            .then(data => {
+                displayMessage(data.response, false);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                displayMessage('Error getting response from bot.', false);
+            });
+        }
+
+        messageInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                getBotResponse();
+            }
+        });
+    </script>
+
+</body>
+</html>
