@@ -47,14 +47,14 @@ def query_openai_route():
         except Exception as e:
             return jsonify({"response": f"Pyharmonics raised the following exception: {str(e)}"}), 200
         plot = harmonic_data.pop('plot', None)
-        logging.debug(f"harmonic data: {harmonic_data.keys()}")
+        logging.info(f"harmonic data: {harmonic_data}")
         logging.info(f"base 64 image: {type(plot)}")
 
         # Prepare the response data
         pyharmonics_response = str({
             "asset": symbol,
             "timeframe": interval,
-            "found": harmonic_data,
+            "found": harmonic_data.get('position', harmonic_data.get('divergences', {})),
         })
         logging.debug(f"Pyharmonics response is built as {type(pyharmonics_response)}\n{pyharmonics_response}")
 

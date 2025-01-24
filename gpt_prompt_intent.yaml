@@ -6,11 +6,10 @@ extract_args: |
   My args are symbol and interval
   Symbol is the asset examples are aapl, btcusdt, ethusdt, MSFT, TSLA, etc.
   Interval means the timeframe, 15m, 1h, 4h, 1d, 1w are supported.
-  My optional args are candles, limit_to, percent_complete.
-  candles means the number of candles to analyze, default is 1000.
-  limit_to means the last number candles where the pattern completion is to be checked, default is 10.
+  My optional args are limit_to, percent_complete.
+  limit_to means forming or formed with in a limit. If I mentioned formed within or limited to I mean this parameter, default is 10.
   percent_complete is a float means how much of the final leg of price movement is completed, default is 0.8.
-  Respond a json string for example {"function_name", "forming_binance", "args": ["BTCUSDT", "1d"] "kwargs": {"candles": 1000, "limit_to": 10, "percent_complete": 0.8}. 
+  Respond a json string for example {"function_name", "forming_binance", "args": ["BTCUSDT", "1d"] "kwargs": {"limit_to": 10, "percent_complete": 0.8}. 
   If optional arguments are not provided ignore for example {"function_name", "forming_binance", "args": ["BTCUSDT", "1d"] "kwargs": {}. 
   Do not pad the json string with any extra characters.
 extract_args_error: |

@@ -1,53 +1,100 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Simple Chat</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js"></script>
+        <title>Pyharmonics Chat</title>
         <style>
             body {
                 font-family: sans-serif;
                 display: flex;
                 flex-direction: column;
                 min-height: 100vh;
-                align-items: center; /* Center vertically */
+                background: #000000;
+                color: white;
+            }
+
+            img {
+                max-width: 100vw; /* 100% of viewport width */
+                height: auto; /* Maintain aspect ratio */
+            }
+
+            H1 {
+                text-align: center;
+                background: #000000;
+                color: white;
+            }
+    
+            .chat-container-wrapper {
+                padding: 10px;
+                display: flex;
+                justify-content: center;
+                min-width: 60vh;
+                flex-wrap: nowrap;
+                flex-direction: row;
+                align-items: stretch;
+            }
+
+            .text-padding {
+                padding: 10px;
+                display: flex;
+                justify-content: center;
+                min-width: 60vh;
+                flex-wrap: nowrap;
+                flex-direction: row;
+                align-items: stretch;
             }
     
             #chat-container {
-                max-width: 80vh;
-                width: 100%;
+                flex: 1;
                 border: 1px solid #ccc;
-                padding: 20px;
+                padding: 10px;
                 border-radius: 5px;
                 overflow-y: scroll;
                 margin-bottom: 20px;
                 background-color: #f0f0f0;
-                min-height: 60vh;
-                max-height: 70vh;
-            }
-    
-            #chat-input-container {
-                width: 100%; 
-                display: flex; 
+                min-height: 15vh;
+                max-height: 15vh;
+                background: darkslategrey;
+                color: white;
             }
     
             #message-input {
-                flex-grow: 1;
-                padding: 10px;
+                flex: 1;
                 border: 1px solid #ccc;
+                padding: 10px;
                 border-radius: 5px;
-                min-width: 80vh;
-                max-height: 10vh;
+                margin-bottom: 20px;
+                background-color: #000000;
+                min-width: 500px;
+                min-height: 15vh;
+                max-height: 15vh;
+                color: white;
             }
+
+            #plot-container {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                margin-top: 20px;
+            }
+
         </style>
     </head>
 <body>
 
-    <div id="chat-container"></div>
+    <h1 style="text-align: center;">Pyharmonics & ChatGPT in harmony!</h1>
+    <div class="chat-container-wrapper">
+        <div class="text-padding"><div id="chat-container"></div></div>
+        <div class="text-padding"><textarea id="message-input" placeholder="Enter your query eg. Are there tradable patterns for BTCUSDT on the 4h timeframe"></textarea></div>
+    </div>
+    <div id="plot-container" >
 
-    <textarea id="message-input" placeholder="Enter your message"></textarea>
+    </div>
 
     <script>
         const chatContainer = document.getElementById('chat-container');
         const messageInput = document.getElementById('message-input');
+        const plotContainer = document.getElementById('plot-container');
 
         function displayMessage(message, isUser) {
             const messageElement = document.createElement('div');
@@ -66,12 +113,18 @@
             const imgElement = document.createElement('img');
             messageElement.classList.add('message');
             messageElement.classList.add(isUser ? 'user-message' : 'bot-message');
-            messageElement.textContent = message['model'];
+            messageElement.innerHTML = marked.parse(message['model']);
             chatContainer.appendChild(breakElement);
             chatContainer.appendChild(messageElement);
             if (message['image'] && message['image']['data']) { 
                 imgElement.src = `data:image/png;base64,${message['image']['data']}`; 
-                chatContainer.appendChild(imgElement);
+                // Remove any existing child elements from the container
+                while (plotContainer.firstChild) {
+                    plotContainer.removeChild(plotContainer.firstChild);
+                }
+
+                // Append the new image element
+                plotContainer.appendChild(imgElement); 
             }
             chatContainer.scrollTop = chatContainer.scrollHeight; // Scroll to bottom
         }
