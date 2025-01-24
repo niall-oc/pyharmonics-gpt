@@ -24,6 +24,11 @@ logging.debug(f"Loaded GPT-3 prompt intents: {gpt_prompt_intent}")
 # Route to interact with OpenAI's GPT-3
 @app.route('/query', methods=['POST'])
 def query_openai_route():
+    """
+        Queries OpenAI's GPT* model to determine the how Pyharmonics API should be called.
+        Calls the appropriate Pyharmonics API function and sends that response to OpenAI for further processing.
+        Finally, returns the response from OpenAI to the client.
+    """
     try:
         # Get JSON data from the request
         data = request.get_json()
@@ -80,6 +85,9 @@ def query_openai_route():
 
 @app.route('/')
 def index():
+    """
+        Renders the chat UI.
+    """
     return render_template('chat_ui.html')
 
 if __name__ == "__main__":
