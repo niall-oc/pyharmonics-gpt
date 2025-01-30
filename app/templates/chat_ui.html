@@ -56,6 +56,7 @@
                 max-height: 15vh;
                 background: darkslategrey;
                 color: white;
+                font-size: 12px;
             }
     
             #message-input {
@@ -109,20 +110,17 @@
 
         function displayResponse(message, isUser) {
             const messageElement = document.createElement('div');
-            const breakElement = document.createElement('br');
             const imgElement = document.createElement('img');
             messageElement.classList.add('message');
             messageElement.classList.add(isUser ? 'user-message' : 'bot-message');
             messageElement.innerHTML = marked.parse(message['model']);
-            chatContainer.appendChild(breakElement);
-            chatContainer.appendChild(messageElement);
+            chatContainer.innerHTML(messageElement);
             if (message['image'] && message['image']['data']) { 
                 imgElement.src = `data:image/png;base64,${message['image']['data']}`; 
                 // Remove any existing child elements from the container
                 while (plotContainer.firstChild) {
                     plotContainer.removeChild(plotContainer.firstChild);
                 }
-
                 // Append the new image element
                 plotContainer.appendChild(imgElement); 
             }
