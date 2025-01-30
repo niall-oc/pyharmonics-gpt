@@ -10,8 +10,8 @@ logging.basicConfig(level=logging.INFO)
 # Initialize Flask app
 app = Flask(__name__)
 
-gpt_prompt_context = yaml.safe_load(open("gpt_prompt_intent.yaml", "r"))
-logging.debug(f"Loaded model context: {gpt_prompt_context}")
+prompt_context = yaml.safe_load(open("prompt_intent.yaml", "r"))
+logging.debug(f"Loaded model context: {prompt_context}")
 
 # Route to interact with OpenAI's GPT-3
 @app.route('/query', methods=['POST'])
@@ -34,7 +34,7 @@ def query_openai_route():
         function_name, args, kwargs = parse_args(
             query_openai(
                 user_prompt,
-                gpt_prompt_context['extract_args']
+                prompt_context['extract_args']
             )
         )
 
@@ -42,7 +42,7 @@ def query_openai_route():
         # If the user asks for something out of scope we explain to them what to ask first.
         # You may want to handle this differently in your application.
         if function_name not in FUNCTION_ROUTER:
-            return jsonify({"response": gpt_prompt_context['extract_args_error']}), 200
+            return jsonify({"response": prompt_context['extract_args_error']}), 200
 
         # Call the appropriate Pyharmonics API function and deal with any exceptions.
         symbol, interval = args
@@ -68,7 +68,7 @@ def query_openai_route():
         # Now we query OpenAI with the Pyharmonics response and the technical analysis context.
         model_response = query_openai(
             pyharmonics_response,
-            gpt_prompt_context['technical_analysis']
+            prompt_context['technical_analysis']
         )
         logging.debug(f"OpenAI model response: {model_response}")
 

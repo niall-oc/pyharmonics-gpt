@@ -96,6 +96,8 @@
         const chatContainer = document.getElementById('chat-container');
         const messageInput = document.getElementById('message-input');
         const plotContainer = document.getElementById('plot-container');
+        const modelURLSelect= document.getElementById('model-url');
+        const modelNameSelect= document.getElementById('model-name');
 
         function displayMessage(message, isUser) {
             const messageElement = document.createElement('div');
@@ -114,7 +116,10 @@
             messageElement.classList.add('message');
             messageElement.classList.add(isUser ? 'user-message' : 'bot-message');
             messageElement.innerHTML = marked.parse(message['model']);
-            chatContainer.innerHTML(messageElement);
+            while (chatContainer.firstChild) {
+                chatContainer.removeChild(chatContainer.firstChild);
+                }
+            chatContainer.appendChild(messageElement);
             if (message['image'] && message['image']['data']) { 
                 imgElement.src = `data:image/png;base64,${message['image']['data']}`; 
                 // Remove any existing child elements from the container
@@ -149,11 +154,37 @@
             });
         }
 
+        function getModelNameList() {
+            const userMessage = messageInput.value;
+            displayMessage(userMessage, true);
+            messageInput.value = '';
+
+            fetch('/query', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ 'prompt': userMessage })
+            })
+            .then(response => response.json())
+            .then(data => {
+                displayResponse(data.response, false);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                displayMessage('Error getting response from bot.', false);
+            });
+        }
+
         messageInput.addEventListener('keydown', (event) => {
             if (event.key === 'Enter') {
                 event.preventDefault();
                 getBotResponse();
             }
+        });
+
+        modelURLSelect.addEventListener('click', (event) => {
+            
         });
     </script>
 
