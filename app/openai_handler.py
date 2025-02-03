@@ -6,6 +6,7 @@ import logging
 import os
 from dotenv import load_dotenv
 
+logging.basicConfig(level=logging.INFO)
 # Load environment variables
 load_dotenv()
 openai_api_model = os.getenv("OPENAI_API_MODEL")  # Ensure the OpenAI API model is set

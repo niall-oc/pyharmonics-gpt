@@ -6,21 +6,29 @@ from pyharmonics.plotter import HarmonicPlotter, PositionPlotter, OptionPlotter
 import base64
 import logging
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 
 
 def outcome(t, hs, d, p):
     assesment = {
-        'patterns': hs.get_patterns(formed=False),
-        'divergences': {family: [p.to_dict() for p in found[:1]] for family, found in d.get_patterns().items()},
+        'forming': hs.get_patterns(formed=False),
+        'patterns': hs.get_patterns(),
     }
-    logging.debug(f"XABCD: {len(assesment['patterns']['XABCD'])} ABCD: {len(assesment['patterns']['ABCD'])} ABC: {len(assesment['patterns']['ABC'])}")
-    if assesment['patterns']['XABCD']:
-        pattern = assesment['patterns']['XABCD'][0]
-    elif assesment['patterns']['ABCD']:
-        pattern = assesment['patterns']['ABCD'][0]
-    elif assesment['patterns']['ABC']:
-        pattern = assesment['patterns']['ABC'][0]
+    result = {}
+    result['divergences'] = {family: [pa.to_dict() for pa in found[-1:]] for family, found in d.get_patterns().items()}
+
+    if assesment['patterns'][hs.XABCD]:
+        pattern = assesment['patterns'][hs.XABCD][0]
+    elif assesment['patterns'][hs.ABCD]:
+        pattern = assesment['patterns'][hs.ABCD][0]
+    elif assesment['patterns'][hs.ABC]:
+        pattern = assesment['patterns'][hs.ABC][0]
+    elif assesment['forming'][hs.XABCD]:
+        pattern = assesment['forming'][hs.XABCD][0]
+    elif assesment['forming'][hs.ABCD]:
+        pattern = assesment['forming'][hs.ABCD][0]
+    elif assesment['forming'][hs.ABC]:
+        pattern = assesment['forming'][hs.ABC][0]
     else:
         pattern = None
 
@@ -33,12 +41,12 @@ def outcome(t, hs, d, p):
         pos_plot.add_divergence_plots(d.get_patterns())
         logging.debug(f"Position plot built: {pos_plot}")
         encoded_img = base64.b64encode(pos_plot.to_image(dpi=600)).decode('utf-8')
-        assesment['plot'] = f'{encoded_img}'
-        assesment['position'] = position
+        result['plot'] = f'{encoded_img}'
+        result['position'] = position
     else:
         encoded_img = base64.b64encode(p.to_image(dpi=600)).decode('utf-8')
-        assesment['plot'] = f'{encoded_img}'
-    return assesment
+        result['plot'] = f'{encoded_img}'
+    return result
 
 def play_position(hs, pattern, strike, dollar_amount):
     pos = Position(pattern, strike, dollar_amount)
@@ -73,17 +81,15 @@ def whats_new_yahoo(symbol, interval, limit_to=-1, candles=1000):
     return whats_new(yc, limit_to=limit_to)
 
 
-def whats_forming(cd, limit_to=10, percent_complete=0.8):
+def whats_forming(cd, limit_to=1, percent_complete=0.8):
     t = OHLCTechnicals(cd.df, cd.symbol, cd.interval)
     hs = HarmonicSearch(t)
     hs.forming(limit_to=limit_to, percent_c_to_d=percent_complete)
+    hs.search(limit_to=limit_to)
     p = HarmonicPlotter(t)
     d = DivergenceSearch(t)
     d.search(limit_to=limit_to)
     p.add_peaks()
-    p.add_harmonic_plots(hs.get_patterns(family=hs.XABCD, formed=False))
-    p.add_harmonic_plots(hs.get_patterns(family=hs.ABCD, formed=False))
-    p.add_harmonic_plots(hs.get_patterns(family=hs.ABC, formed=False))
     p.add_divergence_plots(d.get_patterns())
     return outcome(t, hs, d, p)
 
