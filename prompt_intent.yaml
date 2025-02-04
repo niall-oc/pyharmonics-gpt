@@ -9,8 +9,8 @@ extract_args: |
   My optional args are limit_to, percent_complete.
   limit_to means forming or formed with in a limit. If I mentioned formed within or limited to I mean this parameter, default is 10.
   percent_complete is a float means how much of the final leg of price movement is completed, default is 0.8.
-  Respond a json string for example {"function_name", "forming_binance", "args": ["BTCUSDT", "1d"] "kwargs": {"limit_to": 10, "percent_complete": 0.8}. 
-  If optional arguments are not provided ignore for example {"function_name", "forming_binance", "args": ["BTCUSDT", "1d"] "kwargs": {}. 
+  Respond a json string for example {"function_name", "forming_binance", "args": ["BTCUSDT", "1d"] "kwargs": {"limit_to": 10, "percent_complete": 0.8}}. 
+  If optional arguments are not provided ignore for example {"function_name", "forming_binance", "args": ["BTCUSDT", "1d"] "kwargs": {}}. 
   Do not pad the json string with any extra characters.
 extract_args_error: |
   I could not extract the function_name and args from your query.
