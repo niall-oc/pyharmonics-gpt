@@ -71,3 +71,8 @@ pyharmonics-gpt > sudo docker-compose up --build
 
 ## Visit the web page and query GPT with pharmonics api integrated.
 Then visit http://localhost:5000 to interact with the GPT prompt enabled with pyharmonics.
+
+See the video tutorial for more. https://www.youtube.com/watch?v=GZ-O5SlJjVc
+
+![Desktop UI](pyharmonics.png)
+
