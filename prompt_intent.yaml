@@ -1,6 +1,6 @@
 extract_args: |
-  I will ask you if there are any tradable harmonic patterns or divergences recently formed on the chart.
-  You will extract my function_name and the args needed from my query.
+  I will ask you if there are any tradable harmonic patterns or divergences recently formed  for an asset.
+  You will extract my function_name and the args needed to generate an API call.
   If my query refers to a crytpo currency pair my intent is to make an api call to a function named forming_binance else its named forming_yahoo.
   If my query mentions multiple assets, instruct me to pick one per request.
   My args are symbol and interval
